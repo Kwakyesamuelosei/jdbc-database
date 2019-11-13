@@ -1,77 +1,27 @@
 package io.turntabl;
 
-import javax.swing.plaf.nimbus.State;
-import java.sql.*;
-import java.util.Scanner;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args){
-        //getAllCustomers();
+        CustomerDAOImpl controller = new CustomerDAOImpl();
 
-        while (true){
-            System.out.println();
-            System.out.println("Enter customer name: \n");
-            Scanner input = new Scanner(System.in);
-            String name = input.nextLine();
-            System.out.println();
-            getCustomerByName(name);
-        }
+        //List<ProductTo> response =  controller.getCustomerProducts("Maria Anders");
+        //System.out.println("List of Customer Products");
+        //System.out.println(response);
+
+        //List<ProductTo> response =  controller.get5MostPopularProducts();
+        //System.out.println("List of 5 Most Popular Products");
+        //System.out.println(response);
+
+        String startDate = "1996-07-04";
+        String endDate = "1996-07-11";
+        List<SaleTo> response =  controller.getAllSalesbyWeek(startDate,endDate);
+        System.out.println("List All Sales By Week");
+        System.out.println(response);
     }
 
-    public static void getCustomerByName(String name){
-        try {
-            Class.forName("org.postgresql.Driver");
-            String url = "jdbc:postgresql:northwind";
 
-            try{
-                Connection db_con = DriverManager.getConnection(url,"samuel-kwakye","turntabl");
-                PreparedStatement query = db_con.prepareStatement("select * from customers where contact_name like ?");
-                query.clearParameters();
-                query.setString(1,name + "%");
-                ResultSet rs = query.executeQuery();
-                printFormat(rs);
-            }catch (SQLException sqle){
-                System.out.println("Connection err: " + sqle);
-            }
 
-        }catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-    public static void printFormat(ResultSet rs) throws SQLException {
-        System.out.println("----------------------------------------------------------------------------------------------------------");
-        System.out.printf("%30s %20s %25s %25s", "Contact Title", "Contact Name", "Phone", "Address");
-        System.out.println();
-        System.out.println("----------------------------------------------------------------------------------------------------------");
-        if(rs.next() == false){
-            System.out.format("%30s %30s",
-                    "","Not Record Found");
-            System.out.println();
-        }else{
-            do{
-                System.out.format("%30s %20s %25s %25s",
-                        rs.getString("contact_title"),rs.getString("contact_name"),rs.getString("phone"),rs.getString("address"));
-                System.out.println();
-            }while(rs.next());
-        }
-    }
 
-    public static void getAllCustomers(){
-        try {
-            Class.forName("org.postgresql.Driver");
-            String url = "jdbc:postgresql:northwind";
-
-            try{
-                Connection db_con = DriverManager.getConnection(url,"samuel-kwakye","turntabl");
-                PreparedStatement query = db_con.prepareStatement("select * from customers");
-                ResultSet rs = query.executeQuery();
-                printFormat(rs);
-            }catch (SQLException sqle){
-                System.out.println("Connection err: " + sqle);
-            }
-
-        }catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 }
