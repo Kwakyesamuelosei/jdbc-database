@@ -24,9 +24,11 @@ public class Main {
             String url = "jdbc:postgresql:northwind";
 
             try{
-                Connection db = DriverManager.getConnection(url,"samuel-kwakye","turntabl");
-                Statement s = db.createStatement();
-                ResultSet rs = s.executeQuery("select * from customers where contact_name like '" + name + "%'");
+                Connection db_con = DriverManager.getConnection(url,"samuel-kwakye","turntabl");
+                PreparedStatement query = db_con.prepareStatement("select * from customers where contact_name like ?");
+                query.clearParameters();
+                query.setString(1,name + "%");
+                ResultSet rs = query.executeQuery();
                 printFormat(rs);
             }catch (SQLException sqle){
                 System.out.println("Connection err: " + sqle);
@@ -43,7 +45,7 @@ public class Main {
         System.out.println("----------------------------------------------------------------------------------------------------------");
         if(rs.next() == false){
             System.out.format("%30s %30s",
-                    "","Record Not Found");
+                    "","Not Record Found");
             System.out.println();
         }else{
             do{
@@ -60,9 +62,9 @@ public class Main {
             String url = "jdbc:postgresql:northwind";
 
             try{
-                Connection db = DriverManager.getConnection(url,"samuel-kwakye","turntabl");
-                Statement s = db.createStatement();
-                ResultSet rs = s.executeQuery("select * from customers");
+                Connection db_con = DriverManager.getConnection(url,"samuel-kwakye","turntabl");
+                PreparedStatement query = db_con.prepareStatement("select * from customers");
+                ResultSet rs = query.executeQuery();
                 printFormat(rs);
             }catch (SQLException sqle){
                 System.out.println("Connection err: " + sqle);
