@@ -1,4 +1,4 @@
-package io.turntabl;
+package io.turntabl.Transfers;
 
 public class ProductTo {
     private String product_name;
